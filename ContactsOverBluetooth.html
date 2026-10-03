@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fedora Linux Bluetooth Contact Extractor Guide</title>
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #131b2e;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --border-color: #334155;
+            --code-bg: #070a12;
+
+            /* Syntax Highlighting Colors */
+            --kwd: #f43f5e;
+            --str: #34d399;
+            --com: #64748b;
+            --fn:  #38bdf8;
+            --num: #fbbf24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2.5rem 1rem;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+            padding-bottom: 0.75rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--accent), #0284c7);
+            color: #04101e;
+            font-weight: 700;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.85rem;
+            font-size: 1rem;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        p {
+            margin-bottom: 0.75rem;
+            color: #cbd5e1;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-gui {
+            background-color: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .badge-cli {
+            background-color: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .method-block {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+
+        ol, ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
+            color: #38bdf8;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .code-container {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.1rem;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            color: var(--text-main);
+            border-color: var(--accent);
+            background-color: #273549;
+        }
+
+        .copy-btn.copied {
+            background-color: var(--accent-success);
+            color: #04101e;
+            border-color: var(--accent-success);
+        }
+
+        .alert-card {
+            background-color: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid var(--accent-warning);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.25rem 0;
+            color: #fde68a;
+            font-size: 0.95rem;
+        }
+
+        .alert-card strong {
+            color: #fbbf24;
+        }
+
+        /* Direct syntax tokens */
+        .k { color: var(--kwd); font-weight: 600; }
+        .s { color: var(--str); }
+        .c { color: var(--com); font-style: italic; }
+        .f { color: var(--fn); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Bluetooth Phonebook Extractor</h1>
+        <p class="subtitle">Step-by-step guide to pair your Android device and extract contacts to a clean CSV on Fedora Linux.</p>
+    </header>
+
+    <!-- Step 1 -->
+    <div class="step-card">
+        <div class="step-header">
+            <span class="step-number">1</span>
+            <h2>Install Dependencies</h2>
+        </div>
+        <p>Install the required Python D-Bus bindings and core BlueZ package:</p>
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="f">sudo</span> dnf install bluez python3-dbus</pre>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+        <div class="step-header">
+            <span class="step-number">2</span>
+            <h2>Pair Your Android Phone</h2>
+        </div>
+        <p>Use the desktop interface or the terminal utility to pair your device:</p>
+
+        <div class="method-block">
+            <span class="badge badge-gui">Option A: Graphical Interface (Recommended)</span>
+            <ol>
+                <li>Open <strong>Settings</strong> &rarr; <strong>Bluetooth</strong> on your Fedora desktop.</li>
+                <li>Ensure Bluetooth is turned <strong>ON</strong> and your phone is discoverable.</li>
+                <li>Click your phone's name in the list to pair and confirm the PIN code on both devices.</li>
+            </ol>
+        </div>
+
+        <div class="alert-card">
+            <strong>CRITICAL PERMISSION PROMPT:</strong> When pairing completes on your Android screen, check the box labeled <strong>"Allow access to your contacts and call logs"</strong> and tap <strong>Allow</strong>.
+        </div>
+
+        <div class="method-block">
+            <span class="badge badge-cli">Option B: Command Line Interface</span>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><span class="f">bluetoothctl</span>
+power on
+scan on
+<span class="c"># Replace with your actual phone MAC address</span>
+pair 54:9A:8F:95:28:20
+trust 54:9A:8F:95:28:20
+exit</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+        <div class="step-header">
+            <span class="step-number">3</span>
+            <h2>Create the Extraction Script</h2>
+        </div>
+        <p>Write the extraction script to your working folder (update <code>DEVICE_MAC</code> with your phone's address):</p>
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="f">cat</span> &lt;&lt; <span class="s">'EOF'</span> &gt; get_contacts.py
+<span class="k">import</span> sys, os, time, csv, dbus
+
+DEVICE_MAC = <span class="s">"54:9A:8F:95:28:20"</span>
+TARGET_VCF = os.path.abspath(<span class="s">"contacts_backup.vcf"</span>)
+TARGET_CSV = os.path.abspath(<span class="s">"contacts_backup.csv"</span>)
+
+<span class="k">def</span> <span class="f">extract_contacts</span>():
+    bus = dbus.SessionBus()
+    <span class="k">try</span>:
+        obex = bus.get_object(<span class="s">"org.bluez.obex"</span>, <span class="s">"/org/bluez/obex"</span>)
+        client = dbus.Interface(obex, <span class="s">"org.bluez.obex.Client1"</span>)
+
+        <span class="f">print</span>(<span class="s">f"[*] Connecting to {DEVICE_MAC} via PBAP..."</span>)
+        session_path = client.CreateSession(DEVICE_MAC, {<span class="s">"Target"</span>: <span class="s">"pbap"</span>})
+
+        session_obj = bus.get_object(<span class="s">"org.bluez.obex"</span>, session_path)
+        pbap = dbus.Interface(session_obj, <span class="s">"org.bluez.obex.PhonebookAccess1"</span>)
+
+        pbap.Select(<span class="s">"int"</span>, <span class="s">"pb"</span>)
+        <span class="f">print</span>(<span class="s">"[*] Requesting contact file transfer..."</span>)
+        pbap.PullAll(TARGET_VCF, <span class="s">""</span>)
+        time.sleep(<span class="num">2</span>)
+
+        resolved_path = <span class="k">None</span>
+        <span class="k">if</span> os.path.exists(TARGET_VCF) <span class="k">and</span> os.path.getsize(TARGET_VCF) &gt; <span class="num">0</span>:
+            resolved_path = TARGET_VCF
+        <span class="k">else</span>:
+            fallback = os.path.expanduser(<span class="s">"~/.cache/obexd/contacts_backup.vcf"</span>)
+            <span class="k">if</span> os.path.exists(fallback) <span class="k">and</span> os.path.getsize(fallback) &gt; <span class="num">0</span>:
+                resolved_path = fallback
+
+        <span class="k">if</span> <span class="k">not</span> resolved_path:
+            <span class="f">print</span>(<span class="s">"[-] Error: No phonebook data received."</span>)
+            <span class="f">print</span>(<span class="s">"-> Check that 'Contact Sharing' is permitted in your phone's Bluetooth settings."</span>)
+            <span class="k">return</span>
+
+        <span class="f">print</span>(<span class="s">f"[+] Downloaded vCard ({os.path.getsize(resolved_path)} bytes)"</span>)
+
+        contacts = []
+        name = <span class="s">"Unknown"</span>
+        <span class="k">with</span> <span class="f">open</span>(resolved_path, <span class="s">"r"</span>, encoding=<span class="s">"utf-8"</span>, errors=<span class="s">"ignore"</span>) <span class="k">as</span> f:
+            <span class="k">for</span> line <span class="k">in</span> f:
+                line = line.strip()
+                <span class="k">if</span> line.startswith(<span class="s">"FN:"</span>):
+                    name = line.replace(<span class="s">"FN:"</span>, <span class="s">""</span>).strip()
+                <span class="k">elif</span> line.startswith(<span class="s">"TEL;"</span>) <span class="k">or</span> line.startswith(<span class="s">"TEL:"</span>):
+                    num = line.split(<span class="s">":"</span>)[-<span class="num">1</span>].strip()
+                    contacts.append({<span class="s">"Name"</span>: name, <span class="s">"Phone"</span>: num})
+                    name = <span class="s">"Unknown"</span>
+
+        <span class="k">if</span> contacts:
+            <span class="k">with</span> <span class="f">open</span>(TARGET_CSV, <span class="s">"w"</span>, newline=<span class="s">""</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=[<span class="s">"Name"</span>, <span class="s">"Phone"</span>])
+                writer.writeheader()
+                writer.writerows(contacts)
+            <span class="f">print</span>(<span class="s">f"[+] Exported {len(contacts)} contacts to: {TARGET_CSV}"</span>)
+        <span class="k">else</span>:
+            <span class="f">print</span>(<span class="s">"[-] No contact entries could be parsed."</span>)
+
+    <span class="k">except</span> Exception <span class="k">as</span> err:
+        <span class="f">print</span>(<span class="s">f"[-] Bluetooth Error: {err}"</span>)
+
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    extract_contacts()
+EOF</pre>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+        <div class="step-header">
+            <span class="step-number">4</span>
+            <h2>Run Script &amp; Verify Contacts</h2>
+        </div>
+        <p>Unlock your phone screen and execute the script:</p>
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="f">python3</span> get_contacts.py</pre>
+        </div>
+        <p>Inspect the generated CSV output:</p>
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="f">head</span> -n 10 contacts_backup.csv</pre>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyCode(button) {
+    const pre = button.parentElement.querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const original = button.innerText;
+        button.innerText = 'Copied!';
+        button.classList.add('copied');
+        setTimeout(() => {
+            button.innerText = original;
+            button.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text:', err);
+    });
+}
+</script>
+
+</body>
+</html>
