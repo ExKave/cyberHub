@@ -274,8 +274,8 @@
 power on
 scan on
 <span class="c"># Replace with your actual phone MAC address</span>
-pair 54:9A:8F:95:28:20
-trust 54:9A:8F:95:28:20
+pair 54:9A:8F:95:22:20
+trust 54:9A:8F:95::20
 exit</pre>
             </div>
         </div>
@@ -293,7 +293,7 @@ exit</pre>
             <pre><span class="f">cat</span> &lt;&lt; <span class="s">'EOF'</span> &gt; get_contacts.py
 <span class="k">import</span> sys, os, time, csv, dbus
 
-DEVICE_MAC = <span class="s">"54:9A:8F:95:28:20"</span>
+DEVICE_MAC = <span class="s">"54:9A:8F:95:22:20"</span>
 TARGET_VCF = os.path.abspath(<span class="s">"contacts_backup.vcf"</span>)
 TARGET_CSV = os.path.abspath(<span class="s">"contacts_backup.csv"</span>)
 
