@@ -3,53 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Hello, Hackers!</h1>
-    <p>Welcome to the world of hacking!</p>
-    <table border="1">
-        <tr>
-            <th>Tool</th>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <td>Nmap</td>
-            <td>Network scanning tool</td>
-        </tr>
-        <tr>
-            <td>Metasploit</td>
-            <td>Exploitation framework</td>
-        </tr>
-        <tr>
-            <td>Wireshark</td>
-            <td>Network protocol analyzer</td>
-        </tr>
-
-    </table>
-
-    <a href="https://www.example.com" target="_blank">Visit Example.com</a><br>
-    <a href="https://www.hackthebox.eu" target="_blank">Visit Hack The Box</a><br>
-    <a href="https://www.cybrary.it" target="_blank">Visit Cybrary</a><br>
-    <a href="https://www.offensive-security.com" target="_blank">Visit Offensive Security</a><br>
-    <a href="https://www.hackerone.com" target="_blank">Visit HackerOne</a><br>
-    <a href="https://www.bugcrowd.com" target="_blank">Visit Bugcrowd</a><br>
-    <a href="https://www.sans.org" target="_blank">Visit SANS Institute</a><br>
-    <a href="https://www.blackhat.com" target="_blank">Visit Black Hat</a><br>
-    <a href="https://www.defcon.org" target="_blank">Visit DEF CON</a><br>
-    <a href="https://www.root-me.org" target="_blank">Visit Root Me</a><br>
-    <a href="https://www.vulnhub.com" target="_blank">Visit VulnHub</a><br>
-    <a href="https://www.exploit-db.com" target="_blank">Visit Exploit Database</a><br>
-
-    <br> <br>
-
-    <a href="./ContactsOverBluetooth.html" target="_blank">Contacts Over Bluetooth</a><br>
-    <a href="./Airmon_wif_4wayHandShake.pdf" target="_blank">Airmon wif 4way HandShake</a><br>
-    <a href="./NetworkAnalysysCheatSheet.pdf" target="_blank">Network Analysys Cheat Sheet</a><br>
-    <a href="basic_commands.md" target="_blank">Basic Commands</a><br>
-
+    <title>CyberSec & CTF Resource Hub</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Load Fira Code Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-  
+    <style>
+        :root {
+            --bg-color: #050a0f;
+            --neon-green: #00ff41;
+            --neon-blue: #00d2ff;
+            --panel-bg: rgba(10, 15, 25, 0.8);
+        }
 
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--bg-color);
+            color: #a0aec0;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scanline overlay for CRT effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 50;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .text-neon-green {
+            color: var(--neon-green);
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.4);
+        }
+
+        .text-neon-blue {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Tab Content Transitions */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Link Cards */
+        .resource-card {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid #1a2a3a;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        /* Green Hover Variant */
+        .card-green:hover {
+            border-color: var(--neon-green);
+            background-color: rgba(0, 255, 65, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 65, 0.1);
+        }
+        .card-green:hover::before {
+            background-color: var(--neon-green);
+        }
+        .card-green:hover i, .card-green:hover .title {
+            color: var(--neon-green);
+        }
+
+        /* Blue Hover Variant */
+        .card-blue:hover {
+            border-color: var(--neon-blue);
+            background-color: rgba(0, 210, 255, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.1);
+        }
+        .card-blue:hover::before {
+            background-color: var(--neon-blue);
+        }
+        .card-blue:hover i, .card-blue:hover .title {
+            color: var(--neon-blue);
+        }
+
+        /* Blinking Cursor */
+        .blinking-cursor {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a2a3a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-green); 
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="max-w-7xl mx-auto mb-8 mt-4">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-200 tracking-wider break-words">
+            <span class="text-neon-green">root@hub</span>:
+            <span class="text-neon-blue">~/resources</span>$ <span id="typewriter"></span><span class="blinking-cursor text-neon-green">_</span>
+        </h1>
+        <div class="mt-4 text-gray-400 text-sm md:text-base border-l-2 border-gray-600 pl-4 space-y-1">
+            <p>[+] Directory initialized. Loading modules...</p>
+            <p>[+] Modules loaded successfully. Awaiting user input.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto">
+        <!-- Tab Navigation -->
+        <div class="flex flex-wrap gap-2 border-b border-gray-800 mb-8" id="tab-nav">
+            <button class="tab-btn active px-6 py-3 text-sm md:text-base font-semibold border-b-2 border-neon-green text-neon-green transition-colors flex items-center gap-2" onclick="openTab(event, 'ctf-sites')">
+                <i class="fa-solid fa-flag"></i> CTF Sites
+            </button>
+            <button class="tab-btn px-6 py-3 text-sm md:text-base font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-2" onclick="openTab(event, 'yt-channels')">
+                <i class="fa-brands fa-youtube"></i> YouTube Channels
+            </button>
+            <button class="tab-btn px-6 py-3 text-sm md:text-base font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-2" onclick="openTab(event, 'local-resources')">
+                <i class="fa-solid fa-folder-tree"></i> Local Resources
+            </button>
+        </div>
+
+        <!-- Tab Content: CTF Sites -->
+        <div id="ctf-sites" class="tab-content active">
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-100">Target Arrays</h2>
+                    <p class="text-sm text-gray-500 mt-1">// Wargames & Capture The Flag Platforms</p>
+                </div>
+                <div class="hidden md:block text-neon-green opacity-50 text-4xl">
+                    <i class="fa-solid fa-crosshairs"></i>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <a href="https://www.hackthebox.com/" target="_blank" class="resource-card card-green group">
+                    <i class="fa-solid fa-cube text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">HackTheBox</div>
+                        <div class="text-xs text-gray-500">Penetration testing labs</div>
+                    </div>
+                </a>
+                <a href="https://tryhackme.com/" target="_blank" class="resource-card card-green group">
+                    <i class="fa-solid fa-server text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">TryHackMe</div>
+                        <div class="text-xs text-gray-500">Guided cybersecurity training</div>
+                    </div>
+                </a>
+                <a href="https://picoctf.org/" target="_blank" class="resource-card card-green group">
+                    <i class="fa-solid fa-robot text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">PicoCTF</div>
+                        <div class="text-xs text-gray-500">Beginner friendly CTF</div>
+                    </div>
+                </a>
+                <a href="https://ctftime.org/" target="_blank" class="resource-card card-green group">
+                    <i class="fa-solid fa-clock text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">CTFtime</div>
+                        <div class="text-xs text-gray-500">Global CTF event tracker</div>
+                    </div>
+                </a>
+                <a href="https://overthewire.org/wargames/" target="_blank" class="resource-card card-green group">
+                    <i class="fa-solid fa-network-wired text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">OverTheWire</div>
+                        <div class="text-xs text-gray-500">Command line wargames</div>
+                    </div>
+                </a>
+                <!-- You can copy the block above to add more CTF sites here -->
+            </div>
+        </div>
+
+        <!-- Tab Content: YouTube Channels -->
+        <div id="yt-channels" class="tab-content">
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-100">Video Feeds</h2>
+                    <p class="text-sm text-gray-500 mt-1">// Educational InfoSec Broadcasts</p>
+                </div>
+                <div class="hidden md:block text-neon-blue opacity-50 text-4xl">
+                    <i class="fa-brands fa-youtube"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <a href="https://www.youtube.com/c/ippsec" target="_blank" class="resource-card card-blue group">
+                    <i class="fa-solid fa-play text-2xl w-10 text-gray-400 group-hover:text-neon-blue transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">IppSec</div>
+                        <div class="text-xs text-gray-500">HTB walkthroughs & techniques</div>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/c/JohnHammond010" target="_blank" class="resource-card card-blue group">
+                    <i class="fa-solid fa-play text-2xl w-10 text-gray-400 group-hover:text-neon-blue transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">John Hammond</div>
+                        <div class="text-xs text-gray-500">Malware analysis & CTFs</div>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/c/NetworkChuck" target="_blank" class="resource-card card-blue group">
+                    <i class="fa-solid fa-play text-2xl w-10 text-gray-400 group-hover:text-neon-blue transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">NetworkChuck</div>
+                        <div class="text-xs text-gray-500">IT, Networking & Hacking</div>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/c/LiveOverflow" target="_blank" class="resource-card card-blue group">
+                    <i class="fa-solid fa-play text-2xl w-10 text-gray-400 group-hover:text-neon-blue transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">LiveOverflow</div>
+                        <div class="text-xs text-gray-500">Exploitation & reverse engineering</div>
+                    </div>
+                </a>
+                <!-- You can copy the block above to add more YT channels here -->
+            </div>
+        </div>
+
+        <!-- Tab Content: Local Resources -->
+        <div id="local-resources" class="tab-content">
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-100">Local Intel</h2>
+                    <p class="text-sm text-gray-500 mt-1">// Offline Documents & Scripts</p>
+                </div>
+                <div class="hidden md:block text-neon-green opacity-50 text-4xl">
+                    <i class="fa-solid fa-hard-drive"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <a href="notes/cheatsheet.pdf" target="_blank" class="resource-card card-green group">
+                    <i class="fa-solid fa-file-pdf text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">PrivEsc Cheatsheet</div>
+                        <div class="text-xs text-gray-500">notes/cheatsheet.pdf</div>
+                    </div>
+                </a>
+                <a href="scripts/enum.sh" target="_blank" class="resource-card card-green group">
+                    <i class="fa-solid fa-file-code text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">Auto Enum Script</div>
+                        <div class="text-xs text-gray-500">scripts/enum.sh</div>
+                    </div>
+                </a>
+                <a href="docs/payloads.html" target="_blank" class="resource-card card-green group">
+                    <i class="fa-brands fa-html5 text-2xl w-10 text-gray-400 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg transition-colors">Web Payloads</div>
+                        <div class="text-xs text-gray-500">docs/payloads.html</div>
+                    </div>
+                </a>
+                
+                <!-- PLACEHOLDER FOR NEW LOCAL FILES -->
+                <a href="#" class="resource-card card-green group border-dashed border-gray-600 hover:border-neon-green bg-transparent">
+                    <i class="fa-solid fa-plus text-2xl w-10 text-gray-600 group-hover:text-neon-green transition-colors"></i>
+                    <div>
+                        <div class="title font-bold text-lg text-gray-500 group-hover:text-neon-green transition-colors">Add Resource</div>
+                        <div class="text-xs text-gray-600">Edit HTML to link local file</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Tab switching logic
+        function openTab(evt, tabId) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            // Remove active styling from all tab buttons
+            const tabBtns = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabBtns.length; i++) {
+                // Remove active green styles
+                tabBtns[i].classList.remove("border-neon-green", "text-neon-green");
+                // Add inactive gray styles
+                tabBtns[i].classList.add("border-transparent", "text-gray-500");
+            }
+
+            // Show current tab content
+            document.getElementById(tabId).classList.add("active");
+
+            // Add active styling to clicked button
+            evt.currentTarget.classList.remove("border-transparent", "text-gray-500");
+            
+            // Differentiate color based on tab (Blue for YT, Green for rest)
+            if (tabId === 'yt-channels') {
+                evt.currentTarget.classList.add("border-neon-blue", "text-neon-blue");
+            } else {
+                evt.currentTarget.classList.add("border-neon-green", "text-neon-green");
+            }
+        }
+
+        // Terminal Typewriter Effect Logic
+        const textToType = "ls -la --color=auto";
+        const typingSpeed = 80;
+        let charIndex = 0;
+        
+        function typeWriter() {
+            if (charIndex < textToType.length) {
+                document.getElementById("typewriter").innerHTML += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, typingSpeed);
+            }
+        }
+        
+        // Start typing effect on window load
+        window.onload = typeWriter;
+    </script>
 </body>
 </html>
